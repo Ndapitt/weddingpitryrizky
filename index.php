@@ -126,7 +126,7 @@ $buka = isset($_GET['buka']);
                 <div class="wedding-subtitle">Maha Suci Allah SWT yang telah mempersatukan kita</div>
                 <div class="quote-text">"Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu..." <b>(QS. Ar-Rum: 21)</b></div>
                 
-                <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=500" class="single-arch-photo">
+                <img src="ftommpelai.jpg" class="single-arch-photo">
 
                 <div class="couple-row">
                     <div>
