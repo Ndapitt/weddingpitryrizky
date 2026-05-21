@@ -306,7 +306,7 @@ tr:hover {
 
 <nav class="navbar" id="sidebar">
     <div class="profile" style="margin-top: 15px;">
-        <img src="https://i.ibb.co/2k1t0G9/admin-profile.png" alt="Foto Admin">
+        <img src="pp.jpg" alt="Foto Admin">
         <h4>Admin Panel</h4>
     </div>
     
