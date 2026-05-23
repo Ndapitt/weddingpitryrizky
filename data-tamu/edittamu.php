@@ -1,9 +1,29 @@
 <?php
-    include '../connect.php';
-    $id = $_GET['id'];
+include '../connect.php';
+$id = $_GET['id'];
 
-    $data = mysqli_query($conn, "SELECT * FROM data_tamu WHERE id = '$id'");
-    $item = mysqli_fetch_array($data);
+// 1. PROSES UPDATE DATA (Wajib di paling atas agar fungsi header() tidak error)
+if (isset($_POST['update'])) {
+    $nama      = mysqli_real_escape_string($conn, $_POST['nama']);
+    $kehadiran = mysqli_real_escape_string($conn, $_POST['kehadiran']);
+    $sesi      = mysqli_real_escape_string($conn, $_POST['waktu']); // Menangkap nilai dropdown sesi
+    $pesan     = mysqli_real_escape_string($conn, $_POST['pesan']);
+
+    mysqli_query($conn, "UPDATE data_tamu SET
+        nama='$nama',
+        kehadiran='$kehadiran',
+        waktu='$sesi',
+        pesan='$pesan'
+        WHERE id='$id'
+    ");
+
+    header("location: indextamu.php");
+    exit;
+}
+
+// 2. AMBIL DATA TAMU UNTUK DITAMPILKAN DI FORM
+$data = mysqli_query($conn, "SELECT * FROM data_tamu WHERE id = '$id'");
+$item = mysqli_fetch_array($data);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +42,6 @@
 }
 
 body {
-    /* Latar belakang dinamis abu-abu keunguan halus, sama dengan halaman dashboard */
     background: radial-gradient(circle at top right, #fdf2f8, #f5f3ff, #f8fafc);
     color: #1e1b4b;
     line-height: 1.5;
@@ -49,34 +68,31 @@ form {
 /* --- JUDUL --- */
 h1 {
     text-align: center;
-    color: #312e81; /* Indigo pekat */
+    color: #312e81;
     font-size: 1.8rem;
     font-weight: 800;
     letter-spacing: -0.02em;
 }
 
-/* Menghilangkan emoji bawaan lama */
 h1::before {
     display: none;
 }
 
-/* --- FORM GROUP / WRAPPER TEKS --- */
+/* --- FORM GROUP --- */
 .form-group {
     margin-bottom: 20px;
 }
 
-/* LABEL INPUT */
 form label {
     display: block;
     margin-bottom: 8px;
     font-weight: 700;
     font-size: 0.9rem;
-    color: #4338ca; /* Indigo cerah */
+    color: #4338ca;
 }
 
-/* --- INPUT FIELDS (Text, Time, & Textarea) --- */
 form input[type="text"],
-form input[type="time"],
+form select,
 form textarea {
     width: 100%;
     padding: 12px 16px;
@@ -88,31 +104,29 @@ form textarea {
     font-weight: 500;
     transition: all 0.2s ease;
     outline: none;
+    appearance: none; /* Menghilangkan style default select browser */
+    -webkit-appearance: none;
 }
 
-/* Efek Fokus pada Input Box */
 form input[type="text"]:focus,
-form input[type="time"]:focus,
+form select:focus,
 form textarea:focus {
     border-color: #7c3aed;
     background-color: #ffffff;
     box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
 }
 
-/* Khusus Textarea / Kolom Pesan agar bisa di-resize vertikal saja */
 form textarea {
     resize: vertical;
     min-height: 100px;
     font-family: inherit;
 }
 
-/* --- BUTTON UPDATE GRADASI --- */
 form button {
     display: block;
     width: 100%;
     padding: 14px;
     margin-top: 30px;
-    /* Gradasi warna mewah serasi dengan tombol edit sebelumnya */
     background: linear-gradient(135deg, #06b6d4, #3b82f6);
     color: #ffffff;
     font-size: 1rem;
@@ -130,7 +144,6 @@ form button:hover {
     transform: translateY(-2px);
 }
 
-/* --- TOMBOL KEMBALI (BACK LINK) --- */
 .back-btn {
     display: inline-block;
     margin-top: 20px;
@@ -153,23 +166,26 @@ form button:hover {
     <form method="post">
         <div class="form-group">
             <label>Nama</label>
-            <input type="text" name="nama" value="<?= $item['nama']; ?>" required>
+            <input type="text" name="nama" value="<?= htmlspecialchars($item['nama'] ?? ''); ?>" required>
         </div>
 
         <div class="form-group">
             <label>Kehadiran</label>
-            <input type="text" name="kehadiran" value="<?= $item['kehadiran']; ?>" required>
+            <input type="text" name="kehadiran" value="<?= htmlspecialchars($item['kehadiran'] ?? ''); ?>" required>
         </div>
 
         <div class="form-group">
-            <label>Waktu</label>
-            <input type="time" name="waktu" value="<?= $item['waktu']; ?>" required>
+            <label>Sesi Kedatangan</label>
+            <select name="waktu">
+                <option value="">Pilih Sesi--</option>
+                <option value="Sesi Akad (08:00 - 10:00 WIB)" <?= ($item['waktu'] == 'Sesi Akad (08:00 - 10:00 WIB)') ? 'selected' : ''; ?>>Sesi 1 (08:00 - 10:00 WIB)</option>
+                <option value="Sesi Resepsi (11:00 - Selesai)" <?= ($item['waktu'] == 'Sesi Resepsi (11:00 - Selesai)') ? 'selected' : ''; ?>>Sesi 2 (11:00 - Selesai)</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label>Pesan</label>
-            <!-- Mengubah input type="pesan" (yang tidak valid dalam HTML) menjadi textarea agar lebih rapi menampung teks panjang -->
-            <textarea name="pesan" required><?= $item['pesan']; ?></textarea>
+            <textarea name="pesan" required><?= htmlspecialchars($item['pesan'] ?? ''); ?></textarea>
         </div>
 
         <button type="submit" name="update">Update Data</button>
@@ -181,17 +197,3 @@ form button:hover {
 
 </body>
 </html>
-
-<?php
-    if(isset($_POST['update'])){
-    mysqli_query($conn, "UPDATE data_tamu SET
-        nama='$_POST[nama]',
-        kehadiran='$_POST[kehadiran]',
-        waktu='$_POST[waktu]',
-        pesan='$_POST[pesan]'
-        WHERE id='$id'
-    ");
-
-    header("location: indextamu.php");
-}    
-?>

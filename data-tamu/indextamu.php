@@ -323,21 +323,23 @@ tr:hover {
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>NO</th>
                     <th>Nama</th>
                     <th>Kehadiran</th>
-                    <th>Waktu</th>
+                    <th>Sesi</th>
                     <th>Pesan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
+                $no = 1;
+
                 $data = mysqli_query($conn, "SELECT * FROM data_tamu");
                 while($item = mysqli_fetch_array($data)) {
                 ?>
                 <tr>
-                    <td><?= $item['id']; ?></td>
+                    <td><?= $no++; ?></td>
                     <td><?= htmlspecialchars($item['nama']); ?></td>
                     <td>
                         <?php

@@ -3,15 +3,17 @@ $conn = mysqli_connect("localhost", "root", "", "db_undangan") or die("Koneksi g
 $success = false;
 
 if (isset($_POST['submit'])) {
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $nama      = mysqli_real_escape_string($conn, $_POST['nama']);
     $kehadiran = mysqli_real_escape_string($conn, $_POST['kehadiran']);
-    $waktu_datang = mysqli_real_escape_string($conn, $_POST['waktu_kedatangan']); 
+    
+    // Mengambil nilai sesi pilihan tamu (misal: "Sesi Akad (08:00 - 10:00 WIB)")
+    $sesi_tamu = mysqli_real_escape_string($conn, $_POST['waktu']); 
+    
+    // Murni hanya mengambil ucapan/doa dari user tanpa digabung teks sesi
     $pesan_user = mysqli_real_escape_string($conn, $_POST['pesan']);
     
-    $pesan_lengkap = "[Jam Datang: " . $waktu_datang . "] " . $pesan_user;
-    $tgl = date("Y-m-d H:i:s");
-    
-    $query = "INSERT INTO data_tamu (nama, kehadiran, waktu, pesan) VALUES ('$nama', '$kehadiran', '$tgl', '$pesan_lengkap')";
+    // MEMASUKKAN DATA: Sesi dimasukkan ke kolom 'waktu', Ucapan dimasukkan ke kolom 'pesan'
+    $query = "INSERT INTO data_tamu (nama, kehadiran, waktu, pesan) VALUES ('$nama', '$kehadiran', '$sesi_tamu', '$pesan_user')";
     if (mysqli_query($conn, $query)) {
         $success = true;
     }
@@ -166,12 +168,11 @@ $buka = isset($_GET['buka']);
                                 </select>
                             </div>
                             <div>
-                                <label class="form-label">Sesi</label>
-                                <select name="waktu_kedatangan" class="input-field" required>
+                                <label class="form-label">Sesi Kedatangan</label>
+                               <select name="waktu" class="input-field">
                                     <option value="">Pilih Sesi--</option>
-                                    <option value="Sesi Akad (08:00 - 10:00 WIB)">Sesi Akad (08:00 - 10:00 WIB)</option>
-                                    <option value="Sesi Resepsi (11:00 - Selesai)">Sesi Resepsi (11:00 - Selesai)</option>
-                                    <option value="Sesi Resepsi Sampai Selesai">Sesi Resepsi Sampai Selesai</option>
+                                    <option value="Sesi 1 (08:00 - 10:00 WIB)">Sesi 1 (08:00 - 10:00 WIB)</option>
+                                    <option value="Sesi 2 (11:00 - Selesai)">Sesi 2 (11:00 - Selesai)</option>
                                 </select>
                             </div>
                         </div>
