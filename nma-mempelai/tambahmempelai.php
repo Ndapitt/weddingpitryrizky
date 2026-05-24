@@ -1,5 +1,17 @@
 <?php
 include '../connect.php';
+
+// Pindahkan logika simpan data ke paling atas sebelum HTML dirender
+if (isset($_POST['simpan'])) {
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $keterangan = mysqli_real_escape_string($conn, $_POST['keterangan']);
+
+    mysqli_query($conn, "INSERT INTO data_mempelai (nama, keterangan) VALUES ('$nama', '$keterangan')");
+    
+    // Sekarang redirect akan berjalan dengan aman
+    header("location: indexmempelai.php");
+    exit; // Tambahkan exit agar baris kode di bawahnya tidak ikut dieksekusi setelah redirect
+}
 ?>
 
 <!DOCTYPE html>
@@ -352,14 +364,3 @@ window.addEventListener('resize', () => {
 
 </body>
 </html>
-
-<?php 
-if(isset($_POST['simpan'])){
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $keterangan = mysqli_real_escape_string($conn, $_POST['keterangan']);
-
-    mysqli_query($conn, "INSERT INTO data_mempelai (nama, keterangan) VALUES ('$nama', '$keterangan')");
-    
-    header("location: indexmempelai.php");
-}
-?>

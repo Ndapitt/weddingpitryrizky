@@ -5,6 +5,22 @@ $id = mysqli_real_escape_string($conn, $_GET['id']);
 // Ambil data mempelai berdasarkan id
 $data = mysqli_query($conn, "SELECT * FROM data_mempelai WHERE id='$id'");
 $item = mysqli_fetch_assoc($data);
+
+// PROSES UPDATE DIPINDAHKAN KE SINI (Paling Atas)
+if(isset($_POST['update'])) {
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $keterangan = mysqli_real_escape_string($conn, $_POST['keterangan']);
+
+    mysqli_query($conn, "UPDATE data_mempelai SET
+         nama='$nama',
+         keterangan='$keterangan'
+         WHERE id='$id'
+    ");
+
+    // Redirect akan berfungsi normal sekarang
+    header("location: indexmempelai.php");
+    exit; 
+}
 ?>
 
 <!DOCTYPE html>
@@ -357,18 +373,3 @@ window.addEventListener('resize', () => {
 
 </body>
 </html>
-
-<?php
-if(isset($_POST['update'])) {
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $keterangan = mysqli_real_escape_string($conn, $_POST['keterangan']);
-
-    mysqli_query($conn, "UPDATE data_mempelai SET
-         nama='$nama',
-         keterangan='$keterangan'
-         WHERE id='$id'
-    ");
-
-    header("location: indexmempelai.php");
-}
-?>
