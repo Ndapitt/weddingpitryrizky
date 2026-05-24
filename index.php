@@ -114,11 +114,11 @@ $buka = isset($_GET['buka']);
     <div class="main-card">
         <?php if (!$buka): ?>
             <div class="cover-wrapper">
-                <h1>Dinda & Rizky</h1>
+                <h1>Dinda & Fahri</h1>
                 <div class="cover-date">12 . 09 . 2026</div>
                 <div class="guest-box">
                     <span class="form-label">Kepada Yth:</span>
-                    <h3 style="font-family: 'Playfair Display'; font-size: 1.4rem;"><?= isset($_GET['to']) ? htmlspecialchars($_GET['to']) : 'Tamu Undangan'; ?></h3>
+                    <h3 style="font-family: 'Playfair Display'; font-size: 1.4rem;"><?= isset($_GET['to']) ? htmlspecialchars($_GET['to']) : 'TAMU UNDANGAN'; ?></h3>
                 </div>
                 <a href="?buka=true<?= isset($_GET['to']) ? '&to=' . urlencode($_GET['to']) : ''; ?>" class="btn" id="btnBukaUndangan">Buka Undangan</a>
             </div>
@@ -130,17 +130,45 @@ $buka = isset($_GET['buka']);
                 
                 <img src="ftommpelai.jpg" class="single-arch-photo">
 
-                <div class="couple-row">
-                    <div>
-                        <div class="couple-name">Dinda Kirana, S.T.</div>
-                        <div class="couple-parents">Putri dari Bpk. Ahmad & Ibu Siti</div>
-                    </div>
-                    <div class="couple-ampersand">&</div>
-                    <div>
-                        <div class="couple-name">Rizky Pratama, M.B.A.</div>
-                        <div class="couple-parents">Putra dari Bpk. Hasan & Ibu Rina</div>
-                    </div>
-                </div>
+                <?php
+// 1. Ambil data mempelai wanita
+$query_wanita = mysqli_query($conn, "SELECT * FROM data_mempelai WHERE keterangan = 'mempelai wanita' LIMIT 1");
+$wanita       = mysqli_fetch_array($query_wanita);
+
+// 2. Ambil data mempelai pria
+$query_pria   = mysqli_query($conn, "SELECT * FROM data_mempelai WHERE keterangan = 'mempelai pria' LIMIT 1");
+$pria         = mysqli_fetch_array($query_pria);
+
+// 3. Ambil data orang tua wanita
+$query_ortu_wanita = mysqli_query($conn, "SELECT * FROM data_mempelai WHERE keterangan = 'orang tua mempelai wanita' LIMIT 1");
+$ortu_wanita       = mysqli_fetch_array($query_ortu_wanita);
+
+// 4. Ambil data orang tua pria
+$query_ortu_pria   = mysqli_query($conn, "SELECT * FROM data_mempelai WHERE keterangan = 'orang tua mempelai pria' LIMIT 1");
+$ortu_pria         = mysqli_fetch_array($query_ortu_pria);
+?>
+
+<div class="couple-row">
+    <div>
+        <div class="couple-name">
+            <?= isset($wanita['nama']) ? htmlspecialchars($wanita['nama']) : 'Nama Mempelai Wanita'; ?>
+        </div>
+        <div class="couple-parents">
+            <?= isset($ortu_wanita['nama']) ? htmlspecialchars($ortu_wanita['nama']) : 'Putri dari...'; ?>
+        </div>
+    </div>
+    
+    <div class="couple-ampersand">&</div>
+    
+    <div>
+        <div class="couple-name">
+            <?= isset($pria['nama']) ? htmlspecialchars($pria['nama']) : 'Nama Mempelai Pria'; ?>
+        </div>
+        <div class="couple-parents">
+            <?= isset($ortu_pria['nama']) ? htmlspecialchars($ortu_pria['nama']) : 'Putra dari...'; ?>
+        </div>
+    </div>
+</div>
 
                 <div class="events-section">
                     <div class="grid-2" style="margin-bottom: 15px;">

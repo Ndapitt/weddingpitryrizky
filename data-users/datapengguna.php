@@ -288,6 +288,7 @@ tr:hover {
     <div class="nav-menu">
         <a href="../data-tamu/indextamu.php"><i class='bx bx-user'></i><span>Data Tamu</span></a>
         <a href="datapengguna.php" class="active"><i class='bx bx-group'></i><span>Data Pengguna</span></a>
+        <a href="../nma-mempelai/indexmempelai.php" class="active"><i class='bx bx-group'></i><span>Data Mempelai</span></a>
         <a href="../login.php" class="logout"><i class='bx bx-log-out'></i><span>Logout</span></a>
     </div>
 </nav>
